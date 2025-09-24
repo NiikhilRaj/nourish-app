@@ -11,10 +11,14 @@ import 'screens/saved_recipes/saved_recipes_view.dart';
 import 'screens/food_info/food_info_view.dart';
 import 'screens/profile/profile_view.dart';
 import 'screens/about_us/about_us_view.dart';
+import 'screens/testscreen.dart';
+
 
 final router = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => const LandingView()),
+    //GoRoute(path: '/', builder: (context, state) => const TestScreen()),
+
     GoRoute(path: '/landing', builder: (context, state) => const LandingView()),
     GoRoute(
       path: '/onboarding',
