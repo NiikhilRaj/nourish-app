@@ -65,14 +65,14 @@ class _AppTextFieldState extends State<AppTextField> {
           labelStyle:
               widget.labelStyle ??
               TextStyle(
-                color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+                color: colorScheme.onSurface.withAlpha((153)),
 
                 fontSize: 14,
               ),
           hintStyle:
               widget.hintStyle ??
               TextStyle(
-                color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+                color: colorScheme.onSurface.withAlpha((153)),
                 fontSize: 16,
               ),
           prefixIcon: widget.prefixIcon,
@@ -84,13 +84,13 @@ class _AppTextFieldState extends State<AppTextField> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+              color: colorScheme.onSurface.withAlpha((153)),
             ),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+              color: colorScheme.onSurface.withAlpha((153)),
             ),
           ),
           focusedBorder: OutlineInputBorder(
