@@ -1,44 +1,74 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesProvider extends ChangeNotifier {
-  // Variables to store settings
+  static const String _kIsDarkMode = 'isDarkMode';
+  static const String _kPreferredLanguage = 'preferredLanguage';
+
+  SharedPreferences? _prefs;
+
+  bool _initialized = false;
   bool _isDarkMode = false;
   String _preferredLanguage = 'en';
 
+  bool get initialized => _initialized;
   bool get isDarkMode => _isDarkMode;
   String get preferredLanguage => _preferredLanguage;
 
-  // Load settings from SharedPreferences
   Future<void> loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    
-    // Load theme preference
-    _isDarkMode = prefs.getBool('isDarkMode') ?? false; // Default is false (light mode)
-    
-    // Load language preference
-    _preferredLanguage = prefs.getString('preferredLanguage') ?? 'en'; // Default is 'en'
-    
-    notifyListeners(); // Notify listeners that settings are loaded
+    _prefs ??= await SharedPreferences.getInstance();
+
+    // Read current bool flag if present; otherwise migrate legacy 'themeMode' string
+    final persistedIsDark = _prefs?.getBool(_kIsDarkMode);
+    if (persistedIsDark != null) {
+      _isDarkMode = persistedIsDark;
+    } else {
+      final legacyTheme = _prefs?.getString('themeMode'); // 'dark' | 'light'
+      if (legacyTheme != null) {
+        _isDarkMode = legacyTheme == 'dark';
+        await _prefs!.setBool(_kIsDarkMode, _isDarkMode);
+        await _prefs!.remove('themeMode');
+      } else {
+        _isDarkMode = false;
+      }
+    }
+
+    _preferredLanguage = _prefs?.getString(_kPreferredLanguage) ?? 'en';
+
+    _initialized = true;
+    notifyListeners();
   }
 
-  // Toggle dark mode and save the setting
-  Future<void> toggleDarkMode() async {
-    _isDarkMode = !_isDarkMode;
-    
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', _isDarkMode);
-    
-    notifyListeners(); // Notify listeners to rebuild the UI
+  Future<void> setDarkMode(bool value) async {
+    final prefs = _prefs ??= await SharedPreferences.getInstance();
+    final success = await prefs.setBool(_kIsDarkMode, value);
+    if (success) {
+      _isDarkMode = value;
+      notifyListeners();
+    }
   }
 
-  // Set preferred language and save the setting
+  Future<void> toggleDarkMode() => setDarkMode(!_isDarkMode);
+
   Future<void> setPreferredLanguage(String language) async {
     _preferredLanguage = language;
-    
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('preferredLanguage', language);
-    
-    notifyListeners(); // Notify listeners to rebuild the UI
+    final prefs = _prefs ??= await SharedPreferences.getInstance();
+    await prefs.setString(_kPreferredLanguage, language);
+    notifyListeners();
+  }
+
+  Future<void> reset() async {
+    final prefs = _prefs ??= await SharedPreferences.getInstance();
+    final darkModeRemoved = await prefs.remove(_kIsDarkMode);
+    final languageRemoved = await prefs.remove(_kPreferredLanguage);
+
+    if (darkModeRemoved && languageRemoved) {
+      _isDarkMode = false;
+      _preferredLanguage = 'en';
+      notifyListeners();
+    } else {
+      // Optionally handle the error, e.g., log or throw
+      // debugPrint('Failed to reset SharedPreferences');
+    }
   }
 }
