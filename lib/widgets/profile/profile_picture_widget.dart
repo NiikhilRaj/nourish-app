@@ -14,21 +14,7 @@ class ProfilePictureWidget extends StatelessWidget {
     this.onPhotoChanged,
   });
 
-  static const List<String> _animalAvatars = [
-    'assets/images/FocusFox_icon.png',
-    'assets/images/axolot_on_a_phone.png',
-    'assets/images/cat.png',
-    'assets/images/lil_fox.png',
-    'assets/images/lil_octopus.png',
-    'assets/images/owl.png',
-    'assets/images/panda.png',
-    'assets/images/pikachu.png',
-    'assets/images/polar_bearr.png',
-    'assets/images/raccoon.png',
-    'assets/images/sad_raccoon.png',
-    'assets/images/sleepy-shark.png',
-    'assets/images/toothless.png',
-  ];
+  static const List<String> _animalAvatars = ['assets/images/profile_icons/'];
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +97,7 @@ class ProfilePictureWidget extends StatelessWidget {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(
         source: source,
-        maxWidth: 512, // Resize image to keep base64 storage optimized in Hive
+        maxWidth: 512,
         maxHeight: 512,
         imageQuality: 85,
       );
@@ -158,7 +144,6 @@ class ProfilePictureWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              // Horizontal scroll of cute animal avatars
               SizedBox(
                 height: 90,
                 child: ListView.builder(

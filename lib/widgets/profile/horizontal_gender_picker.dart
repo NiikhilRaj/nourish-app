@@ -16,10 +16,9 @@ class HorizontalGenderPicker extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // Custom distinct colors for each gender choice from the palette
-    final maleColor = const Color(0xff6F60EF);   // Blue-Purple
-    final femaleColor = const Color(0xffF44336); // Red/Pink
-    final othersColor = const Color(0xff9C27B0); // Deep Purple
+    final maleColor = const Color(0xff6F60EF);
+    final femaleColor = const Color(0xffF44336);
+    final othersColor = const Color(0xff9C27B0);
 
     final options = [
       {
@@ -49,12 +48,10 @@ class HorizontalGenderPicker extends StatelessWidget {
         final isSelected = selectedGender.toLowerCase() == label.toLowerCase() ||
             (label == 'Others' && selectedGender.toLowerCase() == 'other');
 
-        // Background color of the card
         final bg = isSelected
             ? color
             : (isDark ? Colors.grey[850]! : const Color(0xfff1efef));
 
-        // Content/Icon color
         final contentColor = isSelected
             ? Colors.white
             : (isDark ? Colors.grey[400]! : Colors.grey[600]!);
@@ -82,7 +79,6 @@ class HorizontalGenderPicker extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  // 1. Selection Indicator Check Circle in top-left
                   Positioned(
                     top: 10,
                     left: 10,
@@ -108,7 +104,6 @@ class HorizontalGenderPicker extends StatelessWidget {
                           : null,
                     ),
                   ),
-                  // 2. Gender Symbol and Label
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

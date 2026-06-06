@@ -25,7 +25,6 @@ class ProfileViewModel extends ChangeNotifier {
   bool get isEditMode => _isEditMode;
 
   void initFromDb(UserModel? user, MealPreferencesModel? prefs) {
-    // Only init if we haven't loaded them or we are not in edit mode
     if (_originalUser == null && _originalPrefs == null) {
       _originalUser = user;
       _originalPrefs = prefs;

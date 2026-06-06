@@ -8,19 +8,16 @@ class HiveService {
   static const String recipeBoxName = 'recipe_box';
 
   static Future<void> init() async {
-    // 1. Initialize Hive with Flutter path
     await Hive.initFlutter();
 
-    // 2. Register manual Adapters
-    Hive.registerAdapter(UserAdapter());
-    Hive.registerAdapter(MealPreferencesAdapter());
-    Hive.registerAdapter(FoodLogAdapter());
-    Hive.registerAdapter(SavedRecipeAdapter());
+    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(UserAdapter());
+    if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MealPreferencesAdapter());
+    if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(FoodLogAdapter());
+    if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(SavedRecipeAdapter());
 
-    // 3. Open Boxes asynchronously
-    await Hive.openBox<UserModel>(userBoxName);
-    await Hive.openBox<MealPreferencesModel>(preferencesBoxName);
-    await Hive.openBox<FoodLogModel>(foodLogBoxName);
-    await Hive.openBox<SavedRecipeModel>(recipeBoxName);
+    if (!Hive.isBoxOpen(userBoxName)) await Hive.openBox<UserModel>(userBoxName);
+    if (!Hive.isBoxOpen(preferencesBoxName)) await Hive.openBox<MealPreferencesModel>(preferencesBoxName);
+    if (!Hive.isBoxOpen(foodLogBoxName)) await Hive.openBox<FoodLogModel>(foodLogBoxName);
+    if (!Hive.isBoxOpen(recipeBoxName)) await Hive.openBox<SavedRecipeModel>(recipeBoxName);
   }
 }

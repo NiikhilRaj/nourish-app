@@ -8,6 +8,7 @@ class ProfileInfoTile extends StatelessWidget {
   final TextEditingController? controller;
   final List<String>? dropdownOptions;
   final TextInputType keyboardType;
+  final IconData? suffixIcon;
   final VoidCallback? onTap;
 
   const ProfileInfoTile({
@@ -20,6 +21,7 @@ class ProfileInfoTile extends StatelessWidget {
     this.dropdownOptions,
     this.keyboardType = TextInputType.text,
     this.onTap,
+    this.suffixIcon,
   });
 
   @override
@@ -31,7 +33,6 @@ class ProfileInfoTile extends StatelessWidget {
     final textColor = isDark ? Colors.white : Colors.black;
     final labelColor = isDark ? Colors.grey[400] : Colors.grey[600];
 
-    // Use a clean Row layout as in the Figma design specs
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 6.0),
@@ -44,7 +45,6 @@ class ProfileInfoTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Label on the left
             Text(
               label,
               style: TextStyle(
@@ -55,7 +55,6 @@ class ProfileInfoTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            // Value or input field on the right
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
@@ -85,12 +84,14 @@ class ProfileInfoTile extends StatelessWidget {
                                     color: textColor,
                                   ),
                                 ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.calendar_today,
-                                  size: 16,
-                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                                ),
+                                if (suffixIcon != null) ...[
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    suffixIcon,
+                                    size: 16,
+                                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                  ),
+                                ],
                               ],
                             ),
                           )

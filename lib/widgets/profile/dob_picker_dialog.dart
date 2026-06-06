@@ -18,7 +18,7 @@ class DobPickerDialog extends StatefulWidget {
 
 class _DobPickerDialogState extends State<DobPickerDialog> {
   late int selectedDay;
-  late int selectedMonth; // 1-indexed (1 = Jan, 12 = Dec)
+  late int selectedMonth;
   late int selectedYear;
 
   final List<String> months = [
@@ -107,7 +107,6 @@ class _DobPickerDialogState extends State<DobPickerDialog> {
             const SizedBox(height: 24),
             Row(
               children: [
-                // 1. Date (Day) Dropdown
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +154,6 @@ class _DobPickerDialogState extends State<DobPickerDialog> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // 2. Month Dropdown
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -205,7 +203,6 @@ class _DobPickerDialogState extends State<DobPickerDialog> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // 3. Year Dropdown
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

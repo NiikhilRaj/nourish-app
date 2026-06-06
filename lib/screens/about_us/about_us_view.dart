@@ -69,7 +69,7 @@ class AboutUsView extends StatelessWidget {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                           spreadRadius: 2,
                         ),
@@ -114,7 +114,6 @@ class AboutUsView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 32),
-                  // Centered, readable, premium info paragraphs from Figma spec
                   const Text(
                     'Google Developer Groups KIIT is a technical club focused on building a community of student developers interested in solving real-world problems.',
                     textAlign: TextAlign.center,

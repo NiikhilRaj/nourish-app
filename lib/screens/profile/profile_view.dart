@@ -7,6 +7,8 @@ import '../../widgets/profile/profile_info_tile.dart';
 import '../../widgets/profile/profile_picture_widget.dart';
 import '../../widgets/profile/profile_macros_widget.dart';
 import '../../widgets/profile/dob_picker_dialog.dart';
+import '../../widgets/profile/profile_input_dialog.dart';
+import '../../widgets/profile/gender_picker_dialog.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -23,13 +25,11 @@ class ProfileView extends StatelessWidget {
       },
       child: Consumer<ProfileViewModel>(
         builder: (context, model, child) {
-          final mediaQuery = MediaQuery.of(context);
-          final screenWidth = mediaQuery.size.width;
+          final screenWidth = MediaQuery.of(context).size.width;
           final paddingValue = screenWidth > 600 ? 32.0 : 24.0;
           final contentWidth = screenWidth > 600 ? 500.0 : double.infinity;
 
-          final theme = Theme.of(context);
-          final isDark = theme.brightness == Brightness.dark;
+          final isDark = Theme.of(context).brightness == Brightness.dark;
 
           return Scaffold(
             backgroundColor: isDark ? Colors.black : Colors.white,
@@ -37,7 +37,10 @@ class ProfileView extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
                 onPressed: () {
                   if (context.canPop()) {
                     context.pop();
@@ -56,7 +59,6 @@ class ProfileView extends StatelessWidget {
                 ),
               ),
               actions: [
-                // Top-right GDG logo button from Figma
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0),
                   child: GestureDetector(
@@ -68,7 +70,7 @@ class ProfileView extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: isDark ? Colors.grey[900] : Colors.white,
                         border: Border.all(
-                          color: const Color(0xffFFC009), // Figma yellow border
+                          color: const Color(0xffFFC009),
                           width: 1.5,
                         ),
                         image: const DecorationImage(
@@ -86,20 +88,20 @@ class ProfileView extends StatelessWidget {
                 child: SizedBox(
                   width: contentWidth,
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: paddingValue, vertical: 10.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: paddingValue,
+                      vertical: 10.0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 10),
-                        // 1. Profile Picture Avatar in center
                         ProfilePictureWidget(
                           profilePhotoBase64: model.profilePhotoBase64,
                           isEditMode: model.isEditMode,
                           onPhotoChanged: model.updateProfilePhoto,
                         ),
                         const SizedBox(height: 24),
-
-                        // 2. Info Header row containing Name label and Save/Edit icons (Figma Layout)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -115,7 +117,6 @@ class ProfileView extends StatelessWidget {
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                // Floppy save icon (only in edit mode when there are unsaved changes)
                                 if (model.isEditMode) ...[
                                   IconButton(
                                     icon: Icon(
@@ -129,7 +130,10 @@ class ProfileView extends StatelessWidget {
                                         : null,
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.close, color: Colors.red),
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: Color(0xffF44336),
+                                    ),
                                     onPressed: model.cancelChanges,
                                   ),
                                 ] else
@@ -145,20 +149,32 @@ class ProfileView extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-
-                        // 3. User Info Tiles (Responsive Row-layout cards)
                         ProfileInfoTile(
                           label: 'Name:',
                           value: model.name,
                           isEditMode: model.isEditMode,
-                          onChanged: model.updateName,
+                          onTap: () async {
+                            final result = await ProfileInputDialog.show(
+                              context,
+                              label: 'Name',
+                              initialValue: model.name,
+                            );
+                            if (result != null) model.updateName(result);
+                          },
                         ),
                         ProfileInfoTile(
                           label: 'Gender:',
                           value: model.gender,
                           isEditMode: model.isEditMode,
-                          dropdownOptions: const ['Male', 'Female', 'Other'],
-                          onChanged: model.updateGender,
+                          onTap: () async {
+                            final result = await GenderPickerDialog.show(
+                              context,
+                              model.gender,
+                            );
+                            if (result != null) {
+                              model.updateGender(result);
+                            }
+                          },
                         ),
                         ProfileInfoTile(
                           label: 'DOB:',
@@ -166,8 +182,12 @@ class ProfileView extends StatelessWidget {
                               ? (model.age == 0 ? '' : '${model.age} yrs')
                               : model.dob,
                           isEditMode: model.isEditMode,
+                          suffixIcon: Icons.calendar_today,
                           onTap: () async {
-                            final selectedDob = await DobPickerDialog.show(context, model.dob);
+                            final selectedDob = await DobPickerDialog.show(
+                              context,
+                              model.dob,
+                            );
                             if (selectedDob != null) {
                               model.updateDob(selectedDob);
                             }
@@ -175,17 +195,53 @@ class ProfileView extends StatelessWidget {
                         ),
                         ProfileInfoTile(
                           label: 'Height:',
-                          value: model.height == 0.0 ? '' : '${model.height.toInt()} cm',
+                          value: model.height == 0.0
+                              ? ''
+                              : '${model.height.toInt()} cm',
                           isEditMode: model.isEditMode,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          onChanged: (val) => model.updateHeight(double.tryParse(val) ?? 0.0),
+                          onTap: () async {
+                            final result = await ProfileInputDialog.show(
+                              context,
+                              label: 'Height',
+                              initialValue: model.height == 0.0
+                                  ? ''
+                                  : model.height.toInt().toString(),
+                              keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              suffix: 'cm',
+                              minValue: 50,
+                              maxValue: 300,
+                            );
+                            if (result != null) {
+                              model.updateHeight(double.tryParse(result) ?? model.height);
+                            }
+                          },
                         ),
                         ProfileInfoTile(
                           label: 'Weight:',
-                          value: model.weight == 0.0 ? '' : '${model.weight.toInt()} kg',
+                          value: model.weight == 0.0
+                              ? ''
+                              : '${model.weight.toInt()} kg',
                           isEditMode: model.isEditMode,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          onChanged: (val) => model.updateWeight(double.tryParse(val) ?? 0.0),
+                          onTap: () async {
+                            final result = await ProfileInputDialog.show(
+                              context,
+                              label: 'Weight',
+                              initialValue: model.weight == 0.0
+                                  ? ''
+                                  : model.weight.toInt().toString(),
+                              keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              suffix: 'kg',
+                              minValue: 10,
+                              maxValue: 500,
+                            );
+                            if (result != null) {
+                              model.updateWeight(double.tryParse(result) ?? model.weight);
+                            }
+                          },
                         ),
                         ProfileInfoTile(
                           label: 'Activity Level:',
@@ -195,12 +251,10 @@ class ProfileView extends StatelessWidget {
                             'Sedentary',
                             'Lightly Active',
                             'Moderately Active',
-                            'Very Active'
+                            'Very Active',
                           ],
                           onChanged: model.updateActivityLevel,
                         ),
-
-                        // 4. Custom Macros block (Figma design specs)
                         ProfileMacrosWidget(
                           targetCalories: model.targetCalories,
                           protein: model.protein,

@@ -1,8 +1,5 @@
 import 'package:hive/hive.dart';
 
-// ==========================================
-// 1. UserModel & Adapter
-// ==========================================
 class UserModel {
   final String name;
   final int age;
@@ -92,9 +89,7 @@ class UserAdapter extends TypeAdapter<UserModel> {
   }
 }
 
-// ==========================================
-// 2. MealPreferencesModel & Adapter
-// ==========================================
+
 class MealPreferencesModel {
   final int targetCalories;
   final int targetProtein;
@@ -134,10 +129,10 @@ class MealPreferencesAdapter extends TypeAdapter<MealPreferencesModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return MealPreferencesModel(
-      targetCalories: fields[0] as int? ?? 2000,
-      targetProtein: fields[1] as int? ?? 150,
-      targetCarbs: fields[2] as int? ?? 200,
-      targetFat: fields[3] as int? ?? 70,
+      targetCalories: fields[0] as int? ?? 0,
+      targetProtein: fields[1] as int? ?? 0,
+      targetCarbs: fields[2] as int? ?? 0,
+      targetFat: fields[3] as int? ?? 0,
     );
   }
 
@@ -156,9 +151,7 @@ class MealPreferencesAdapter extends TypeAdapter<MealPreferencesModel> {
   }
 }
 
-// ==========================================
-// 3. FoodLogModel & Adapter
-// ==========================================
+
 class FoodLogModel {
   final String id;
   final DateTime date;
@@ -167,7 +160,7 @@ class FoodLogModel {
   final int protein;
   final int carbs;
   final int fat;
-  final String mealType; // breakfast, lunch, dinner, snack
+  final String mealType;
 
   FoodLogModel({
     required this.id,
@@ -215,7 +208,7 @@ class FoodLogAdapter extends TypeAdapter<FoodLogModel> {
     };
     return FoodLogModel(
       id: fields[0] as String? ?? '',
-      date: fields[1] as DateTime? ?? DateTime.now(),
+      date: fields[1] as DateTime? ?? DateTime.fromMillisecondsSinceEpoch(0),
       name: fields[2] as String? ?? '',
       calories: fields[3] as int? ?? 0,
       protein: fields[4] as int? ?? 0,
@@ -248,9 +241,7 @@ class FoodLogAdapter extends TypeAdapter<FoodLogModel> {
   }
 }
 
-// ==========================================
-// 4. SavedRecipeModel & Adapter
-// ==========================================
+
 class SavedRecipeModel {
   final String id;
   final String title;
