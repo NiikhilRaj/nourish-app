@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsView extends StatelessWidget {
   const AboutUsView({super.key});
+
+  Future<void> _launchSocial(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +97,7 @@ class AboutUsView extends StatelessWidget {
                           color: isDark ? Colors.white : Colors.black,
                           size: 26,
                         ),
-                        onPressed: () {},
+                        onPressed: () => _launchSocial('https://www.linkedin.com/company/gdgkiit/'),
                       ),
                       const SizedBox(width: 16),
                       IconButton(
@@ -100,7 +106,7 @@ class AboutUsView extends StatelessWidget {
                           color: isDark ? Colors.white : Colors.black,
                           size: 26,
                         ),
-                        onPressed: () {},
+                        onPressed: () => _launchSocial('https://www.instagram.com/_gdgkiit_/'),
                       ),
                       const SizedBox(width: 16),
                       IconButton(
@@ -109,7 +115,7 @@ class AboutUsView extends StatelessWidget {
                           color: isDark ? Colors.white : Colors.black,
                           size: 26,
                         ),
-                        onPressed: () {},
+                        onPressed: () => _launchSocial('https://github.com/GDSC-KIIT'),
                       ),
                     ],
                   ),

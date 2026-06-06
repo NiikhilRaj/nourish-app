@@ -27,9 +27,6 @@ class DbProvider extends ChangeNotifier {
     _savedRecipes = SavedRecipeDao.getSavedRecipes();
   }
 
-  // ==========================================
-  // User Management
-  // ==========================================
   Future<void> saveUser(UserModel user) async {
     await UserDao.saveUser(user);
     _currentUser = user;
@@ -42,18 +39,12 @@ class DbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ==========================================
-  // Meal Preferences
-  // ==========================================
   Future<void> saveMealPreferences(MealPreferencesModel preferences) async {
     await MealPreferencesDao.savePreferences(preferences);
     _mealPreferences = preferences;
     notifyListeners();
   }
 
-  // ==========================================
-  // Food Logs
-  // ==========================================
   List<FoodLogModel> getLogsForDate(DateTime date) {
     return FoodLogDao.getLogsByDate(date);
   }
@@ -76,9 +67,6 @@ class DbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ==========================================
-  // Saved Recipes
-  // ==========================================
   bool isRecipeSaved(String id) {
     return SavedRecipeDao.isRecipeSaved(id);
   }

@@ -14,7 +14,19 @@ class ProfilePictureWidget extends StatelessWidget {
     this.onPhotoChanged,
   });
 
-  static const List<String> _animalAvatars = ['assets/images/profile_icons/'];
+  static const List<String> avatars = [
+    'assets/images/profile_icons/axolot_on_a_phone.png',
+    'assets/images/profile_icons/cat.png',
+    'assets/images/profile_icons/lil_fox.png',
+    'assets/images/profile_icons/lil_octopus.png',
+    'assets/images/profile_icons/owl.png',
+    'assets/images/profile_icons/panda.png',
+    'assets/images/profile_icons/pikachu.png',
+    'assets/images/profile_icons/polar_bearr.png',
+    'assets/images/profile_icons/raccoon.png',
+    'assets/images/profile_icons/sad_raccoon.png',
+    'assets/images/profile_icons/sleepy-shark.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -149,9 +161,9 @@ class ProfilePictureWidget extends StatelessWidget {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  itemCount: _animalAvatars.length,
+                  itemCount: avatars.length,
                   itemBuilder: (context, index) {
-                    final assetPath = _animalAvatars[index];
+                    final assetPath = avatars[index];
                     return GestureDetector(
                       onTap: () {
                         if (onPhotoChanged != null) {
