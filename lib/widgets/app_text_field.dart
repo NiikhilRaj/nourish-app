@@ -17,7 +17,7 @@ class AppTextField extends StatefulWidget {
   final String? Function(String?)? validator;
 
   const AppTextField({
-    Key? key,
+   super.key,
     this.controller,
     this.label,
     this.hintText,
@@ -30,7 +30,7 @@ class AppTextField extends StatefulWidget {
     this.hintStyle,
 
     this.validator,
-  }) : super(key: key);
+  }) ;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -55,19 +55,26 @@ class _AppTextFieldState extends State<AppTextField> {
         controller: widget.controller,
         enabled: widget.enabled,
         obscureText: _isObscured,
-      
-        keyboardType: widget.keyboardType,
+
+        keyboardType: widget.keyboardType ?? TextInputType.text,
         validator: widget.validator,
-        style:  TextStyle(fontSize: 16, color: colorScheme.onSurface),
+        style: TextStyle(fontSize: 16, color: colorScheme.onSurface),
         decoration: InputDecoration(
-          labelText: widget.label,
-          hintText: widget.hintText,
+          labelText: widget.label ?? 'Label',
+          hintText: widget.hintText ?? 'Enter something',
           labelStyle:
               widget.labelStyle ??
-               TextStyle(color:colorScheme.onSurface.withOpacity(0.6), fontSize: 14),
+              TextStyle(
+                color: colorScheme.onSurface.withAlpha((153)),
+
+                fontSize: 14,
+              ),
           hintStyle:
               widget.hintStyle ??
-               TextStyle(color:colorScheme.onSurface.withOpacity(0.6), fontSize: 16),
+              TextStyle(
+                color: colorScheme.onSurface.withAlpha((153)),
+                fontSize: 16,
+              ),
           prefixIcon: widget.prefixIcon,
           suffixIcon: _buildSuffixIcon(colorScheme),
           contentPadding: const EdgeInsets.symmetric(
@@ -76,15 +83,19 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide:  BorderSide(color:colorScheme.onSurface.withOpacity(0.6)),
+            borderSide: BorderSide(
+              color: colorScheme.onSurface.withAlpha((153)),
+            ),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide:  BorderSide(color:colorScheme.onSurface.withOpacity(0.6)),
+            borderSide: BorderSide(
+              color: colorScheme.onSurface.withAlpha((153)),
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide:  BorderSide(color:colorScheme.primary),
+            borderSide: BorderSide(color: colorScheme.primary),
           ),
           isDense: true,
         ),
@@ -97,7 +108,7 @@ class _AppTextFieldState extends State<AppTextField> {
       return IconButton(
         icon: Icon(
           _isObscured ? Icons.visibility_off : Icons.visibility,
-          color:colorScheme.onSurfaceVariant,
+          color: colorScheme.onSurfaceVariant,
           size: 20,
         ),
         onPressed:

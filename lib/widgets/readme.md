@@ -65,3 +65,34 @@ CustomTextField(
   validator: validateEmail,
 )
 ```
+// MacroPercentIndicator
+// A comprehensive macro tracking widget with progress rings and pie chart
+
+MacroPercentIndicator(
+  completed: 460,  // Current progress value
+  total: 1000,     // Target/goal value
+  macros: [
+    MacroData(name: "Protein", percent: 27, color: Colors.purple),
+    MacroData(name: "Carbs", percent: 45, color: Colors.orange),
+    MacroData(name: "Fats", percent: 26, color: Colors.red),
+  ],
+)
+
+// ProgressRing
+// Circular progress indicator with percentage display
+
+ProgressRing(
+  percent: 0.46,        // 0.0 to 1.0 range
+  label: 'Completed',   // Text below percentage
+)
+
+// MacroPieChart
+// Multi-segment pie chart with legend
+
+MacroPieChart(
+  data: [
+    MacroData(name: "Protein", percent: 27, color: Colors.purple),
+    MacroData(name: "Carbs", percent: 45, color: Colors.orange),
+    MacroData(name: "Fats", percent: 26, color: Colors.red),
+  ],
+)
