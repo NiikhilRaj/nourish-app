@@ -7,10 +7,10 @@ class MealPreferencesDao {
 
   static MealPreferencesModel getPreferences() {
     return _box.get('current_preferences') ?? MealPreferencesModel(
-      targetCalories: 2000,
-      targetProtein: 150,
-      targetCarbs: 200,
-      targetFat: 70,
+      targetCalories: 0,
+      targetProtein: 0,
+      targetCarbs: 0,
+      targetFat: 0,
     );
   }
 

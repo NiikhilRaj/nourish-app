@@ -10,6 +10,8 @@ class UserModel {
   final double weight;
   final double height;
   final String activityLevel;
+  final String? profilePhotoBase64;
+  final String? dob;
 
   UserModel({
     required this.name,
@@ -18,6 +20,8 @@ class UserModel {
     required this.weight,
     required this.height,
     required this.activityLevel,
+    this.profilePhotoBase64,
+    this.dob,
   });
 
   UserModel copyWith({
@@ -27,6 +31,8 @@ class UserModel {
     double? weight,
     double? height,
     String? activityLevel,
+    String? profilePhotoBase64,
+    String? dob,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -35,6 +41,8 @@ class UserModel {
       weight: weight ?? this.weight,
       height: height ?? this.height,
       activityLevel: activityLevel ?? this.activityLevel,
+      profilePhotoBase64: profilePhotoBase64 ?? this.profilePhotoBase64,
+      dob: dob ?? this.dob,
     );
   }
 }
@@ -56,13 +64,15 @@ class UserAdapter extends TypeAdapter<UserModel> {
       weight: (fields[3] as num? ?? 0.0).toDouble(),
       height: (fields[4] as num? ?? 0.0).toDouble(),
       activityLevel: fields[5] as String? ?? '',
+      profilePhotoBase64: fields[6] as String?,
+      dob: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -74,7 +84,11 @@ class UserAdapter extends TypeAdapter<UserModel> {
       ..writeByte(4)
       ..write(obj.height)
       ..writeByte(5)
-      ..write(obj.activityLevel);
+      ..write(obj.activityLevel)
+      ..writeByte(6)
+      ..write(obj.profilePhotoBase64)
+      ..writeByte(7)
+      ..write(obj.dob);
   }
 }
 
