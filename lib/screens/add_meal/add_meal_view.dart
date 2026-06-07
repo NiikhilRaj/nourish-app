@@ -105,18 +105,40 @@ class AddMealView extends StatelessWidget {
                                   child: TextField(
                                     controller: model.textController,
                                     style: const TextStyle(color: Colors.black, fontSize: 16),
-                                    decoration: const InputDecoration(
-                                      prefixIcon: Icon(Icons.search, color: Colors.grey),
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                                      suffixIcon: model.isLoading
+                                          ? const Padding(
+                                              padding: EdgeInsets.all(12.0),
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8C7CF0)),
+                                                ),
+                                              ),
+                                            )
+                                          : IconButton(
+                                              icon: const Icon(Icons.add_circle, color: Color(0xFF8C7CF0)),
+                                              onPressed: () {
+                                                if (model.textController.text.trim().isNotEmpty) {
+                                                  model.searchAndAddIngredient(
+                                                    model.textController.text,
+                                                    context,
+                                                  );
+                                                }
+                                              },
+                                            ),
                                       labelText: 'Add Meal/Ingredient',
                                       hintText: 'Start typing',
-                                      labelStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                                      hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
+                                      labelStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+                                      hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
                                       border: InputBorder.none,
                                     ),
                                     onSubmitted: (value) {
                                       if (value.trim().isNotEmpty) {
-                                        model.addIngredient(value);
-                                        model.textController.clear();
+                                        model.searchAndAddIngredient(value, context);
                                       }
                                     },
                                   ),
