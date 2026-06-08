@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 import '../../providers/db_provider.dart';
 import '../../widgets/utils/toast_service.dart';
+import '../../backend/models.dart';
 
 class AddMealViewModel extends ChangeNotifier {
   String _selectedMealType = 'Breakfast';
@@ -147,7 +148,8 @@ class AddMealViewModel extends ChangeNotifier {
   Future<void> saveMeal(DbProvider dbProvider, String dateString) async {
     if (_ingredients.isEmpty) return;
 
-    final List<MealLog> newLogs = [];
+    final List<FoodLogModel> newLogs = [];
+    final parsedDate = DateTime.tryParse(dateString) ?? DateTime.now();
     for (final ingredient in _ingredients) {
       final key = ingredient.toLowerCase().trim();
       double calories = 0.0; // TODO: fetch from open source API for food nutrition info if missing
@@ -164,21 +166,20 @@ class AddMealViewModel extends ChangeNotifier {
       }
 
       newLogs.add(
-        MealLog(
+        FoodLogModel(
           id: "${DateTime.now().microsecondsSinceEpoch}_$ingredient",
-          date: dateString,
+          date: parsedDate,
           mealType: _selectedMealType,
           name: ingredient,
-          quantity: '1',
-          calories: calories,
-          protein: protein,
-          carbs: carbs,
-          fat: fat,
+          calories: calories.toInt(),
+          protein: protein.toInt(),
+          carbs: carbs.toInt(),
+          fat: fat.toInt(),
         ),
       );
     }
 
-    await dbProvider.addMealLogs(newLogs);
+    await dbProvider.addFoodLogs(newLogs);
     _ingredients.clear();
     notifyListeners();
   }

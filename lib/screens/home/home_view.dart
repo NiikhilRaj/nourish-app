@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../providers/db_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/app_bottom_navigation_bar.dart';
+import '../../backend/models.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -19,8 +20,7 @@ class HomeView extends StatelessWidget {
     final profileUrl = authProvider.profileImageUrl;
     final userName = authProvider.userName;
 
-    final todayString = "${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
-    final todayLogs = dbProvider.logs.where((log) => log.date == todayString).toList();
+    final todayLogs = dbProvider.getLogsForDate(DateTime.now());
 
     final double todayCalories = todayLogs.fold(0.0, (sum, item) => sum + item.calories);
     final double todayProtein = todayLogs.fold(0.0, (sum, item) => sum + item.protein);
@@ -425,7 +425,7 @@ class HomeView extends StatelessWidget {
     BuildContext context,
     String title,
     Widget iconWidget,
-    List<MealLog> logs,
+    List<FoodLogModel> logs,
     DbProvider dbProvider,
   ) {
     final double totalCal = logs.fold(0.0, (sum, log) => sum + log.calories);
@@ -483,9 +483,9 @@ class HomeView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        'Qty: ${log.quantity}',
-                        style: const TextStyle(
+                      const Text(
+                        'Qty: 1',
+                        style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                         ),

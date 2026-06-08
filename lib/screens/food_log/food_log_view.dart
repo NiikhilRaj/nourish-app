@@ -9,6 +9,7 @@ import '../../providers/db_provider.dart';
 import '../../providers/auth_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../widgets/app_bottom_navigation_bar.dart';
+import '../../backend/models.dart';
 
 class FoodLogView extends StatelessWidget {
   const FoodLogView({super.key});
@@ -477,7 +478,7 @@ class FoodLogView extends StatelessWidget {
     BuildContext context,
     String title,
     Widget iconWidget,
-    List<MealLog> logs,
+    List<FoodLogModel> logs,
     DbProvider dbProvider,
   ) {
     final double totalCal = logs.fold(0.0, (sum, log) => sum + log.calories);
@@ -535,9 +536,9 @@ class FoodLogView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        'Qty: ${log.quantity}',
-                        style: const TextStyle(
+                      const Text(
+                        'Qty: 1',
+                        style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                         ),

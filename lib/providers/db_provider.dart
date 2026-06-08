@@ -1,82 +1,37 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class MealLog {
-  final String id;
-  final String date;
-  final String mealType;
-  final String name;
-  final String quantity;
-  final double calories;
-  final double protein;
-  final double carbs;
-  final double fat;
-
-  MealLog({
-    required this.id,
-    required this.date,
-    required this.mealType,
-    required this.name,
-    required this.quantity,
-    required this.calories,
-    required this.protein,
-    required this.carbs,
-    required this.fat,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'date': date,
-      'mealType': mealType,
-      'name': name,
-      'quantity': quantity,
-      'calories': calories,
-      'protein': protein,
-      'carbs': carbs,
-      'fat': fat,
-    };
-  }
-
-  factory MealLog.fromMap(Map<String, dynamic> map) {
-    return MealLog(
-      id: map['id'] as String,
-      date: map['date'] as String,
-      mealType: map['mealType'] as String,
-      name: map['name'] as String,
-      quantity: map['quantity'] as String,
-      calories: (map['calories'] as num).toDouble(),
-      protein: (map['protein'] as num).toDouble(),
-      carbs: (map['carbs'] as num).toDouble(),
-      fat: (map['fat'] as num).toDouble(),
-    );
-  }
-}
+import '../backend/daos/user_dao.dart';
+import '../backend/daos/meal_preferences_dao.dart';
+import '../backend/daos/food_log_dao.dart';
+import '../backend/daos/saved_recipe_dao.dart';
+import '../backend/models.dart';
 
 class DbProvider extends ChangeNotifier {
-  List<MealLog> _logs = [];
+  UserModel? _currentUser;
+  MealPreferencesModel? _mealPreferences;
+  List<FoodLogModel> _foodLogs = [];
+  List<SavedRecipeModel> _savedRecipes = [];
   DateTime _selectedDate = DateTime.now();
 
-  final double caloriesTarget = 2200.0;
-  final double proteinTarget = 110.0;
-  final double carbsTarget = 110.0;
-  final double fatTarget = 60.0;
+  DbProvider() {
+    _loadInitialData();
+  }
 
-  List<MealLog> get logs => _logs;
+  UserModel? get currentUser => _currentUser;
+  MealPreferencesModel? get mealPreferences => _mealPreferences;
+  List<FoodLogModel> get foodLogs => _foodLogs;
+  List<FoodLogModel> get logs => _foodLogs;
+  List<SavedRecipeModel> get savedRecipes => _savedRecipes;
   DateTime get selectedDate => _selectedDate;
 
-  DbProvider() {
-    _loadLogs();
+  void _loadInitialData() {
+    _currentUser = UserDao.getUser();
+    _mealPreferences = MealPreferencesDao.getPreferences();
+    _foodLogs = FoodLogDao.getAllLogs();
+    _savedRecipes = SavedRecipeDao.getSavedRecipes();
   }
 
-  String _formatDateKey(DateTime dateTime) {
-    return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
-  }
-
-  List<MealLog> get selectedDateLogs {
-    final dateString = _formatDateKey(_selectedDate);
-    return _logs.where((log) => log.date == dateString).toList();
+  List<FoodLogModel> get selectedDateLogs {
+    return getLogsForDate(_selectedDate);
   }
 
   double get totalCaloriesConsumed {
@@ -93,6 +48,22 @@ class DbProvider extends ChangeNotifier {
 
   double get totalFatConsumed {
     return selectedDateLogs.fold(0.0, (sum, item) => sum + item.fat);
+  }
+
+  double get caloriesTarget {
+    return _mealPreferences?.targetCalories.toDouble() ?? 2200.0;
+  }
+
+  double get proteinTarget {
+    return _mealPreferences?.targetProtein.toDouble() ?? 110.0;
+  }
+
+  double get carbsTarget {
+    return _mealPreferences?.targetCarbs.toDouble() ?? 110.0;
+  }
+
+  double get fatTarget {
+    return _mealPreferences?.targetFat.toDouble() ?? 60.0;
   }
 
   double get calorieProgressPercent {
@@ -116,35 +87,71 @@ class DbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addMealLogs(List<MealLog> newLogs) async {
-    _logs.addAll(newLogs);
-    await _saveLogs();
+  Future<void> saveUser(UserModel user) async {
+    await UserDao.saveUser(user);
+    _currentUser = user;
+    notifyListeners();
+  }
+
+  Future<void> deleteUser() async {
+    await UserDao.deleteUser();
+    _currentUser = null;
+    notifyListeners();
+  }
+
+  Future<void> saveMealPreferences(MealPreferencesModel preferences) async {
+    await MealPreferencesDao.savePreferences(preferences);
+    _mealPreferences = preferences;
+    notifyListeners();
+  }
+
+  List<FoodLogModel> getLogsForDate(DateTime date) {
+    return FoodLogDao.getLogsByDate(date);
+  }
+
+  Future<void> saveFoodLog(FoodLogModel log) async {
+    await FoodLogDao.saveLog(log);
+    _foodLogs = FoodLogDao.getAllLogs();
+    notifyListeners();
+  }
+
+  Future<void> addFoodLogs(List<FoodLogModel> newLogs) async {
+    for (final log in newLogs) {
+      await FoodLogDao.saveLog(log);
+    }
+    _foodLogs = FoodLogDao.getAllLogs();
+    notifyListeners();
+  }
+
+  Future<void> deleteFoodLog(String id) async {
+    await FoodLogDao.deleteLog(id);
+    _foodLogs = FoodLogDao.getAllLogs();
     notifyListeners();
   }
 
   Future<void> deleteMealLog(String logId) async {
-    _logs.removeWhere((log) => log.id == logId);
-    await _saveLogs();
+    await deleteFoodLog(logId);
+  }
+
+  Future<void> clearAllFoodLogs() async {
+    await FoodLogDao.clearAll();
+    _foodLogs = [];
     notifyListeners();
   }
 
-  Future<void> _loadLogs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final logsString = prefs.getString('food_logs_cache');
-      if (logsString != null) {
-        final List<dynamic> decoded = json.decode(logsString);
-        _logs = decoded.map((item) => MealLog.fromMap(item as Map<String, dynamic>)).toList();
-        notifyListeners();
-      }
-    } catch (_) {}
+  bool isRecipeSaved(String id) {
+    return SavedRecipeDao.isRecipeSaved(id);
   }
 
-  Future<void> _saveLogs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final logsString = json.encode(_logs.map((log) => log.toMap()).toList());
-      await prefs.setString('food_logs_cache', logsString);
-    } catch (_) {}
+  Future<void> saveRecipe(SavedRecipeModel recipe) async {
+    await SavedRecipeDao.saveRecipe(recipe);
+    _savedRecipes = SavedRecipeDao.getSavedRecipes();
+    notifyListeners();
+  }
+
+  Future<void> deleteRecipe(String id) async {
+    await SavedRecipeDao.deleteRecipe(id);
+    _savedRecipes = SavedRecipeDao.getSavedRecipes();
+    notifyListeners();
   }
 }
