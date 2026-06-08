@@ -51,19 +51,19 @@ class DbProvider extends ChangeNotifier {
   }
 
   double get caloriesTarget {
-    return _mealPreferences?.targetCalories.toDouble() ?? 2200.0;
+    return _mealPreferences?.targetCalories.toDouble() ?? 0.0;
   }
 
   double get proteinTarget {
-    return _mealPreferences?.targetProtein.toDouble() ?? 110.0;
+    return _mealPreferences?.targetProtein.toDouble() ?? 0.0;
   }
 
   double get carbsTarget {
-    return _mealPreferences?.targetCarbs.toDouble() ?? 110.0;
+    return _mealPreferences?.targetCarbs.toDouble() ?? 0.0;
   }
 
   double get fatTarget {
-    return _mealPreferences?.targetFat.toDouble() ?? 60.0;
+    return _mealPreferences?.targetFat.toDouble() ?? 0.0;
   }
 
   double get calorieProgressPercent {

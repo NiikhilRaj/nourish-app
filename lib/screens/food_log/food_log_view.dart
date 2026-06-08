@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +7,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../providers/db_provider.dart';
-import '../../providers/auth_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../widgets/app_bottom_navigation_bar.dart';
 import '../../backend/models.dart';
@@ -17,9 +17,8 @@ class FoodLogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dbProvider = Provider.of<DbProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context);
     final dateLogs = dbProvider.selectedDateLogs;
-    final profileUrl = authProvider.profileImageUrl;
+    final profilePhoto = dbProvider.currentUser?.profilePhotoBase64;
 
     final double totalCalories = dbProvider.totalCaloriesConsumed;
     final double caloriesTarget = dbProvider.caloriesTarget;
@@ -108,16 +107,24 @@ class FoodLogView extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () => context.go('/profile'),
-                          child: profileUrl.isNotEmpty
+                          child: profilePhoto != null && profilePhoto.isNotEmpty
                               ? Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage(profileUrl),
-                                      fit: BoxFit.cover,
-                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: profilePhoto.startsWith('assets/')
+                                        ? Image.asset(profilePhoto, fit: BoxFit.cover)
+                                        : Image.memory(
+                                            base64Decode(profilePhoto),
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) => Container(
+                                              color: const Color(0xFFE8DEF8),
+                                              child: const Icon(Icons.person, color: Color(0xFF6F60EF), size: 22),
+                                            ),
+                                          ),
                                   ),
                                 )
                               : Container(

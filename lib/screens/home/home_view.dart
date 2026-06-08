@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -17,8 +18,10 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final dbProvider = Provider.of<DbProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
-    final profileUrl = authProvider.profileImageUrl;
-    final userName = authProvider.userName;
+    final profilePhoto = dbProvider.currentUser?.profilePhotoBase64;
+    final userName = dbProvider.currentUser?.name.isNotEmpty == true
+        ? dbProvider.currentUser!.name
+        : authProvider.userName;
 
     final todayLogs = dbProvider.getLogsForDate(DateTime.now());
 
@@ -75,16 +78,24 @@ class HomeView extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () => context.go('/profile'),
-                          child: profileUrl.isNotEmpty
+                          child: profilePhoto != null && profilePhoto.isNotEmpty
                               ? Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage(profileUrl),
-                                      fit: BoxFit.cover,
-                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: profilePhoto.startsWith('assets/')
+                                        ? Image.asset(profilePhoto, fit: BoxFit.cover)
+                                        : Image.memory(
+                                            base64Decode(profilePhoto),
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) => Container(
+                                              color: const Color(0xFFE8DEF8),
+                                              child: const Icon(Icons.person, color: Color(0xFF6F60EF), size: 22),
+                                            ),
+                                          ),
                                   ),
                                 )
                               : Container(
@@ -156,9 +167,9 @@ class HomeView extends StatelessWidget {
                                   color: Color(0xFF6F60EF),
                                 ),
                               ),
-                              const TextSpan(
-                                text: ' / 2200 kcal',
-                                style: TextStyle(
+                              TextSpan(
+                                text: ' / ${caloriesTarget.toInt()} kcal',
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF919297),
                                 ),
