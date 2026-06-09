@@ -6,6 +6,7 @@ import 'router.dart';
 import 'providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/shared_preferences_provider.dart';
+import 'theme/app_colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,14 +42,21 @@ class MyApp extends StatelessWidget {
               title: 'Nourish App',
               themeMode: theme.themeMode,
               theme: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
               ),
               darkTheme: ThemeData.dark().copyWith(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: AppColors.primary,
+                  brightness: Brightness.dark,
+                ),
               ),
 
               // Optional language binding (expand when you localize)
-              locale: Locale(['en'].contains(sp.preferredLanguage) ? sp.preferredLanguage : 'en'),
+              locale: Locale(
+                ['en'].contains(sp.preferredLanguage)
+                    ? sp.preferredLanguage
+                    : 'en',
+              ),
               supportedLocales: const [Locale('en')],
 
               routerConfig: router,

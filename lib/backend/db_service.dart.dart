@@ -1,3 +1,1 @@
-class DbService {
-    
-}
+export 'db_service.dart';

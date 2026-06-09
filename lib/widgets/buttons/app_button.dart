@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/app_colors.dart';
+
 enum ButtonVariant { primary, outlined, secondary }
 
 class AppButton extends StatelessWidget {
@@ -82,7 +84,7 @@ class AppButton extends StatelessWidget {
     switch (variant) {
       case ButtonVariant.primary:
         return ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF6F60EF),
+          backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
           shape: RoundedRectangleBorder(
@@ -101,7 +103,7 @@ class AppButton extends StatelessWidget {
         );
       case ButtonVariant.outlined:
         return OutlinedButton.styleFrom(
-          side: const BorderSide(color: Color(0xFF6F60EF)),
+          side: const BorderSide(color: AppColors.primary),
           foregroundColor: Colors.black,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
           shape: RoundedRectangleBorder(

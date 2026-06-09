@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 import 'landing_model.dart';
 
 class LandingView extends StatelessWidget {
@@ -15,8 +16,8 @@ class LandingView extends StatelessWidget {
           return Scaffold(
             body: Center(
               child: ElevatedButton(
-                onPressed: () => context.go('/home'),
-                child: Text('Go to Home'),
+                onPressed: () => context.go('/onboarding'),
+                child: const Text('Get Started'),
               ),
             ),
           );
