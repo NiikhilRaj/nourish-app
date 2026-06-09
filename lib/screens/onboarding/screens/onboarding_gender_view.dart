@@ -70,7 +70,7 @@ class _GenderGrid extends StatelessWidget {
     return SizedBox(
       width: 230,
       child: Wrap(
-        spacing: 32,
+        spacing: 38,
         runSpacing: 22,
         children: [
           _GenderOption(value: 'male', label: 'Male', model: model),

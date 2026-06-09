@@ -40,6 +40,11 @@ class DbService {
         gender TEXT,
         height_cm REAL,
         weight_kg REAL,
+        activity_level TEXT,
+        calorie_goal INTEGER,
+        protein_goal_g INTEGER,
+        carbs_goal_g INTEGER,
+        fat_goal_g INTEGER,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL
       )
@@ -47,6 +52,11 @@ class DbService {
     await _ensureColumn(db, 'user_profile', 'gender', 'TEXT');
     await _ensureColumn(db, 'user_profile', 'height_cm', 'REAL');
     await _ensureColumn(db, 'user_profile', 'weight_kg', 'REAL');
+    await _ensureColumn(db, 'user_profile', 'activity_level', 'TEXT');
+    await _ensureColumn(db, 'user_profile', 'calorie_goal', 'INTEGER');
+    await _ensureColumn(db, 'user_profile', 'protein_goal_g', 'INTEGER');
+    await _ensureColumn(db, 'user_profile', 'carbs_goal_g', 'INTEGER');
+    await _ensureColumn(db, 'user_profile', 'fat_goal_g', 'INTEGER');
   }
 
   Future<void> _ensureColumn(

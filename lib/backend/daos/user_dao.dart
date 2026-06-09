@@ -4,7 +4,8 @@ import '../db_service.dart';
 import '../models/user_profile_model.dart';
 
 class UserDao {
-  UserDao({DbService? dbService}) : _dbService = dbService ?? DbService.instance;
+  UserDao({DbService? dbService})
+    : _dbService = dbService ?? DbService.instance;
 
   final DbService _dbService;
 
@@ -39,9 +40,24 @@ class UserDao {
     required double heightCm,
     required double weightKg,
   }) async {
+    await _upsert({'height_cm': heightCm, 'weight_kg': weightKg});
+  }
+
+  Future<void> upsertActivityLevel(String activityLevel) async {
+    await _upsert({'activity_level': activityLevel});
+  }
+
+  Future<void> upsertMacroGoals({
+    required int calories,
+    required int proteinG,
+    required int carbsG,
+    required int fatG,
+  }) async {
     await _upsert({
-      'height_cm': heightCm,
-      'weight_kg': weightKg,
+      'calorie_goal': calories,
+      'protein_goal_g': proteinG,
+      'carbs_goal_g': carbsG,
+      'fat_goal_g': fatG,
     });
   }
 
@@ -60,25 +76,18 @@ class UserDao {
     final existingProfile = await getProfile();
 
     if (existingProfile == null) {
-      await db.insert(
-        tableName,
-        {
-          'id': 1,
-          'created_at': now,
-          'updated_at': now,
-          ...values,
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      await db.insert(tableName, {
+        'id': 1,
+        'created_at': now,
+        'updated_at': now,
+        ...values,
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
       return;
     }
 
     await db.update(
       tableName,
-      {
-        ...values,
-        'updated_at': now,
-      },
+      {...values, 'updated_at': now},
       where: 'id = ?',
       whereArgs: const [1],
     );

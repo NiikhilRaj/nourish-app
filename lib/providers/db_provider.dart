@@ -45,9 +45,28 @@ class DbProvider extends ChangeNotifier {
     required double heightCm,
     required double weightKg,
   }) async {
-    await _userDao.upsertBodyMetrics(
-      heightCm: heightCm,
-      weightKg: weightKg,
+    await _userDao.upsertBodyMetrics(heightCm: heightCm, weightKg: weightKg);
+    _userProfile = await _userDao.getProfile();
+    notifyListeners();
+  }
+
+  Future<void> saveUserActivityLevel(String activityLevel) async {
+    await _userDao.upsertActivityLevel(activityLevel);
+    _userProfile = await _userDao.getProfile();
+    notifyListeners();
+  }
+
+  Future<void> saveUserMacroGoals({
+    required int calories,
+    required int proteinG,
+    required int carbsG,
+    required int fatG,
+  }) async {
+    await _userDao.upsertMacroGoals(
+      calories: calories,
+      proteinG: proteinG,
+      carbsG: carbsG,
+      fatG: fatG,
     );
     _userProfile = await _userDao.getProfile();
     notifyListeners();
