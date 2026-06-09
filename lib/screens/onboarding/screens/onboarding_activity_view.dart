@@ -66,15 +66,12 @@ class _OnboardingActivityViewState extends State<OnboardingActivityView> {
           ),
           const SizedBox(width: 20),
           Expanded(
-            child: Opacity(
-              opacity: isActivitySelected ? 1.0 : 0.6,
-              child: OnboardingActionButton(
-                label: 'Next',
-                onPressed:
-                    widget.model.isSaving || !isActivitySelected
-                        ? null
-                        : widget.onNext,
-              ),
+            child: OnboardingActionButton(
+              label: 'Next',
+              onPressed:
+                  widget.model.isSaving || !isActivitySelected
+                      ? null
+                      : widget.onNext,
             ),
           ),
         ],

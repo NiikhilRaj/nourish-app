@@ -51,10 +51,12 @@ class OnboardingStepScaffold extends StatelessWidget {
   final Widget field;
   final Widget footer;
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(18, 52, 18, 28),
@@ -93,8 +95,11 @@ class OnboardingStepScaffold extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 22),
+
               field,
-              const Spacer(),
+
+              Spacer(),
+
               footer,
             ],
           ),
@@ -103,6 +108,7 @@ class OnboardingStepScaffold extends StatelessWidget {
     );
   }
 }
+
 
 class OnboardingTextField extends StatelessWidget {
   const OnboardingTextField({
@@ -187,17 +193,18 @@ class OnboardingActionButton extends StatelessWidget {
 
     return SizedBox(
       height: 48,
-      child: isOutlined
-          ? OutlinedButton(
-              onPressed: onPressed,
-              style: _outlinedStyle,
-              child: _content(AppColors.black),
-            )
-          : ElevatedButton(
-              onPressed: onPressed,
-              style: _filledStyle,
-              child: _content(Colors.white),
-            ),
+      child:
+          isOutlined
+              ? OutlinedButton(
+                onPressed: onPressed,
+                style: _outlinedStyle,
+                child: _content(AppColors.black),
+              )
+              : ElevatedButton(
+                onPressed: onPressed,
+                style: _filledStyle,
+                child: _content(Colors.white),
+              ),
     );
   }
 
@@ -225,8 +232,9 @@ class OnboardingActionButton extends StatelessWidget {
 
   ButtonStyle get _filledStyle {
     return ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primaryLight,
-      disabledBackgroundColor: AppColors.primaryLight.withOpacity(0.55),
+      backgroundColor: AppColors.primary,
+      disabledBackgroundColor: AppColors.primaryLight,
+      disabledForegroundColor: Colors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );

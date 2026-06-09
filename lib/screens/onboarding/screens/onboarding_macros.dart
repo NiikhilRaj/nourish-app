@@ -21,102 +21,115 @@ class OnboardingMacrosView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      // Optional: Explicitly allow resizing (this is true by default in Scaffold)
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 48, 18, 28),
-          child: Column(
-            children: [
-              const Text(
-                'Almost done!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'We have calculated optimal macros for you:',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.charcoal,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(height: 22),
-              const Text(
-                'You can edit them if you like!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.charcoal,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(height: 52),
-              _MacroField(
-                label: 'Calories',
-                suffix: 'kcal',
-                controller: model.caloriesController,
-              ),
-              const SizedBox(height: 46),
-              _MacroField(
-                label: 'Protein',
-                suffix: 'g',
-                controller: model.proteinController,
-              ),
-              const SizedBox(height: 46),
-              _MacroField(
-                label: 'Carbohydrates',
-                suffix: 'g',
-                controller: model.carbsController,
-              ),
-              const SizedBox(height: 46),
-              _MacroField(
-                label: 'Fats',
-                suffix: 'g',
-                controller: model.fatController,
-              ),
-              if (model.macroError != null) ...[
-                const SizedBox(height: 14),
-                Text(
-                  model.macroError!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.error,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              // Moved your padding here
+              padding: const EdgeInsets.fromLTRB(18, 48, 18, 28),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Almost done!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+                      const Text(
+                        'We have calculated optimal macros for you:',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.charcoal,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      const SizedBox(height: 22),
+                      const Text(
+                        'You can edit them if you like!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.charcoal,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                      _MacroField(
+                        label: 'Calories',
+                        suffix: 'kcal',
+                        controller: model.caloriesController,
+                      ),
+                      const SizedBox(height: 38),
+                      _MacroField(
+                        label: 'Protein',
+                        suffix: 'g',
+                        controller: model.proteinController,
+                      ),
+                      const SizedBox(height: 38),
+                      _MacroField(
+                        label: 'Carbohydrates',
+                        suffix: 'g',
+                        controller: model.carbsController,
+                      ),
+                      const SizedBox(height: 38),
+                      _MacroField(
+                        label: 'Fats',
+                        suffix: 'g',
+                        controller: model.fatController,
+                      ),
+                      if (model.macroError != null) ...[
+                        const SizedBox(height: 14),
+                        Text(
+                          model.macroError!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ],
+                      // Spacer now safely expands because of IntrinsicHeight
+                      const Spacer(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OnboardingActionButton(
+                              label: 'Back',
+                              variant: OnboardingActionVariant.outlined,
+                              onPressed: onBack,
+                            ),
+                          ),
+                          const SizedBox(width: 28),
+                          Expanded(
+                            child: OnboardingActionButton(
+                              label: 'Start',
+                              icon: Icons.chevron_right,
+                              onPressed: model.isSaving ? null : onNext,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-              const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: OnboardingActionButton(
-                      label: 'Back',
-                      variant: OnboardingActionVariant.outlined,
-                      onPressed: onBack,
-                    ),
-                  ),
-                  const SizedBox(width: 28),
-                  Expanded(
-                    child: OnboardingActionButton(
-                      label: 'Start',
-                      icon: Icons.chevron_right,
-                      onPressed: model.isSaving ? null : onNext,
-                    ),
-                  ),
-                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
