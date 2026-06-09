@@ -27,10 +27,13 @@ class OnboardingNameView extends StatelessWidget {
         errorText: errorText,
         textCapitalization: TextCapitalization.words,
       ),
-      footer: OnboardingActionButton(
-        label: 'Next',
-        icon: Icons.chevron_right,
-        onPressed: isSaving ? null : onNext,
+      footer: SizedBox(
+        width: double.infinity,
+        child: OnboardingActionButton(
+          label: 'Next',
+          icon: Icons.chevron_right,
+          onPressed: isSaving ? null : onNext,
+        ),
       ),
     );
   }
@@ -73,7 +76,7 @@ class OnboardingStepScaffold extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.ink,
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0,
                 ),
@@ -84,7 +87,7 @@ class OnboardingStepScaffold extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: AppColors.charcoal,
-                  fontSize: 11,
+                  fontSize: 13,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0,
                 ),
@@ -207,7 +210,7 @@ class OnboardingActionButton extends StatelessWidget {
           label,
           style: TextStyle(
             color: color,
-            fontSize: 12,
+            fontSize: 16,
             fontWeight: FontWeight.w700,
             letterSpacing: 0,
           ),
