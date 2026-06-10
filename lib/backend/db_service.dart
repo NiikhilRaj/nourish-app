@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 // IMPORTANT: Make sure this path points to where your actual model file lives!
-import 'models/user_profile_model.dart';
+import 'models/user_model.dart';
 
 class DbService {
   DbService._();
@@ -21,7 +21,7 @@ class DbService {
     await Hive.initFlutter();
 
     // Register your data model adapter here
-    Hive.registerAdapter(UserProfileModelAdapter());
+    Hive.registerAdapter(UserAdapter());
 
     // Open the box so it is ready for synchronous read/write access later
     await Hive.openBox(userProfileBoxName);
@@ -32,7 +32,9 @@ class DbService {
   /// A synchronous getter to easily access your profile box anywhere
   Box get userProfileBox {
     if (!Hive.isBoxOpen(userProfileBoxName)) {
-      throw Exception('Box $userProfileBoxName is not open. Call init() first.');
+      throw Exception(
+        'Box $userProfileBoxName is not open. Call init() first.',
+      );
     }
     return Hive.box(userProfileBoxName);
   }

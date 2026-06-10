@@ -1,18 +1,59 @@
 import 'package:flutter/material.dart';
-
 import '../backend/daos/user_dao.dart';
-import '../backend/models/user_profile_model.dart';
+import '../backend/daos/meal_preferences_dao.dart';
+import '../backend/daos/food_log_dao.dart';
+import '../backend/daos/saved_recipe_dao.dart';
+import '../backend/models.dart';
+import '../backend/models/user_model.dart';
 
 class DbProvider extends ChangeNotifier {
   final UserDao _userDao = UserDao();
-
-  UserProfileModel? _userProfile;
   bool _isLoading = false;
 
-  UserProfileModel? get userProfile => _userProfile;
+  // THE SINGLE SOURCE OF TRUTH STATE
+  UserModel? _userProfile;
+
+  // DEV BRANCH FEATURE STATE
+  MealPreferencesModel? _mealPreferences;
+  List<FoodLogModel> _foodLogs = [];
+  List<SavedRecipeModel> _savedRecipes = [];
+
+  DbProvider() {
+    _loadInitialData();
+  }
+
+  // === UNIFIED GETTERS ===
+  UserModel? get userProfile => _userProfile;
+  // This alias ensures the team's existing UI widgets don't break!
+  UserModel? get currentUser => _userProfile;
   bool get isLoading => _isLoading;
 
-  Future<UserProfileModel?> loadUserProfile() async {
+  MealPreferencesModel? get mealPreferences => _mealPreferences;
+  List<FoodLogModel> get foodLogs => _foodLogs;
+  List<SavedRecipeModel> get savedRecipes => _savedRecipes;
+
+  void _loadInitialData() {
+    _userProfile = UserDao.getUser(); // Pulls your model from your box now
+    _mealPreferences = MealPreferencesDao.getPreferences();
+    _foodLogs = FoodLogDao.getAllLogs();
+    _savedRecipes = SavedRecipeDao.getSavedRecipes();
+  }
+
+  // === UPDATED TEAM METHODS (Now using UserModel) ===
+  Future<void> saveUser(UserModel user) async {
+    await UserDao.saveUser(user);
+    _userProfile = user;
+    notifyListeners();
+  }
+
+  Future<void> deleteUser() async {
+    await UserDao.deleteUser();
+    _userProfile = null;
+    notifyListeners();
+  }
+
+  // === YOUR ONBOARDING METHODS ===
+  Future<UserModel?> loadUserProfile() async {
     _isLoading = true;
     notifyListeners();
 
@@ -69,6 +110,51 @@ class DbProvider extends ChangeNotifier {
       fatG: fatG,
     );
     _userProfile = await _userDao.getProfile();
+    notifyListeners();
+  }
+
+  // === DEV BRANCH TRACKING METHODS ===
+  Future<void> saveMealPreferences(MealPreferencesModel preferences) async {
+    await MealPreferencesDao.savePreferences(preferences);
+    _mealPreferences = preferences;
+    notifyListeners();
+  }
+
+  List<FoodLogModel> getLogsForDate(DateTime date) {
+    return FoodLogDao.getLogsByDate(date);
+  }
+
+  Future<void> saveFoodLog(FoodLogModel log) async {
+    await FoodLogDao.saveLog(log);
+    _foodLogs = FoodLogDao.getAllLogs();
+    notifyListeners();
+  }
+
+  Future<void> deleteFoodLog(String id) async {
+    await FoodLogDao.deleteLog(id);
+    _foodLogs = FoodLogDao.getAllLogs();
+    notifyListeners();
+  }
+
+  Future<void> clearAllFoodLogs() async {
+    await FoodLogDao.clearAll();
+    _foodLogs = [];
+    notifyListeners();
+  }
+
+  bool isRecipeSaved(String id) {
+    return SavedRecipeDao.isRecipeSaved(id);
+  }
+
+  Future<void> saveRecipe(SavedRecipeModel recipe) async {
+    await SavedRecipeDao.saveRecipe(recipe);
+    _savedRecipes = SavedRecipeDao.getSavedRecipes();
+    notifyListeners();
+  }
+
+  Future<void> deleteRecipe(String id) async {
+    await SavedRecipeDao.deleteRecipe(id);
+    _savedRecipes = SavedRecipeDao.getSavedRecipes();
     notifyListeners();
   }
 }

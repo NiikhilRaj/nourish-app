@@ -2,27 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
 
-// 1. ADDED: Import Hive
-import 'package:hive_flutter/hive_flutter.dart';
-
 import 'router.dart';
 import 'providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/shared_preferences_provider.dart';
 import 'theme/app_colors.dart';
 
-// 2. ADDED: Import your database service and model
-// (Make sure to adjust these paths if your folders are structured differently!)
+// === UNIFIED IMPORTS ===
 import 'backend/db_service.dart';
-import 'backend/models/user_profile_model.dart';
+import 'backend/hive_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // --- 3. FIXED: HIVE INITIALIZATION ---
-  // We removed the duplicate Hive.initFlutter() and registerAdapter()
-  // because DbService.instance.init() is already handling them for us!
+  // === UNIFIED DATABASE INITIALIZATION ===
+  // We run both initialization setups so your profile features
+  // AND the team's tracking features are fully prepared on startup.
   await DbService.instance.init();
+  await HiveService.init();
   // -------------------------------------
 
   // Preload SharedPreferencesProvider to avoid flicker and ensure availability
@@ -45,7 +42,6 @@ class MyApp extends StatelessWidget {
       ),
       child: MultiProvider(
         providers: [
-          // Provide preloaded SharedPreferencesProvider first so others can depend on it
           ChangeNotifierProvider<SharedPreferencesProvider>.value(value: prefs),
           ...providers, // Auth, Db, Theme (proxy)
         ],
@@ -65,7 +61,6 @@ class MyApp extends StatelessWidget {
                 ),
               ),
 
-              // Optional language binding (expand when you localize)
               locale: Locale(
                 ['en'].contains(sp.preferredLanguage)
                     ? sp.preferredLanguage

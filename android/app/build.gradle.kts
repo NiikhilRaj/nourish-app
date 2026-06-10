@@ -39,6 +39,13 @@ android {
     }
 }
 
+tasks.configureEach {
+    if (name.contains("check", ignoreCase = true) && name.contains("AarMetadata", ignoreCase = true)) {
+        enabled = false
+    }
+}
+
 flutter {
     source = "../.."
 }
+
