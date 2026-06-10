@@ -1,76 +1,39 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+// IMPORTANT: Make sure this path points to where your actual model file lives!
+import 'models/user_profile_model.dart';
 
 class DbService {
   DbService._();
 
   static final DbService instance = DbService._();
 
-  static const String databaseName = 'nourish_app.db';
-  static const int databaseVersion = 1;
+  // In Hive, we use "Boxes" instead of tables.
+  static const String userProfileBoxName = 'user_profile';
 
-  Database? _database;
+  bool _isInitialized = false;
 
-  Future<Database> get database async {
-    final existingDatabase = _database;
-    if (existingDatabase != null) return existingDatabase;
+  /// Call this once in your main.dart before runApp()
+  Future<void> init() async {
+    if (_isInitialized) return;
 
-    final databasePath = await getDatabasesPath();
-    final path = '$databasePath/$databaseName';
+    // Initializes Hive with the correct local directory for Flutter
+    await Hive.initFlutter();
 
-    _database = await openDatabase(
-      path,
-      version: databaseVersion,
-      onCreate: _onCreate,
-      onOpen: _ensureSchema,
-    );
+    // Register your data model adapter here
+    Hive.registerAdapter(UserProfileModelAdapter());
 
-    return _database!;
+    // Open the box so it is ready for synchronous read/write access later
+    await Hive.openBox(userProfileBoxName);
+
+    _isInitialized = true;
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await _ensureSchema(db);
-  }
-
-  Future<void> _ensureSchema(Database db) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS user_profile (
-        id INTEGER PRIMARY KEY CHECK (id = 1),
-        name TEXT,
-        age INTEGER,
-        gender TEXT,
-        height_cm REAL,
-        weight_kg REAL,
-        activity_level TEXT,
-        calorie_goal INTEGER,
-        protein_goal_g INTEGER,
-        carbs_goal_g INTEGER,
-        fat_goal_g INTEGER,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      )
-    ''');
-    await _ensureColumn(db, 'user_profile', 'gender', 'TEXT');
-    await _ensureColumn(db, 'user_profile', 'height_cm', 'REAL');
-    await _ensureColumn(db, 'user_profile', 'weight_kg', 'REAL');
-    await _ensureColumn(db, 'user_profile', 'activity_level', 'TEXT');
-    await _ensureColumn(db, 'user_profile', 'calorie_goal', 'INTEGER');
-    await _ensureColumn(db, 'user_profile', 'protein_goal_g', 'INTEGER');
-    await _ensureColumn(db, 'user_profile', 'carbs_goal_g', 'INTEGER');
-    await _ensureColumn(db, 'user_profile', 'fat_goal_g', 'INTEGER');
-  }
-
-  Future<void> _ensureColumn(
-    Database db,
-    String tableName,
-    String columnName,
-    String columnType,
-  ) async {
-    final columns = await db.rawQuery('PRAGMA table_info($tableName)');
-    final hasColumn = columns.any((column) => column['name'] == columnName);
-    if (hasColumn) return;
-
-    await db.execute(
-      'ALTER TABLE $tableName ADD COLUMN $columnName $columnType',
-    );
+  /// A synchronous getter to easily access your profile box anywhere
+  Box get userProfileBox {
+    if (!Hive.isBoxOpen(userProfileBoxName)) {
+      throw Exception('Box $userProfileBoxName is not open. Call init() first.');
+    }
+    return Hive.box(userProfileBoxName);
   }
 }

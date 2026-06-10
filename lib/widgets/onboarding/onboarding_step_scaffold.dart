@@ -24,53 +24,65 @@ class OnboardingStepScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: true, // Allows layout to adapt when keyboard opens
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 52, 18, 28),
-          child: Column(
-            children: [
-              const Text(
-                'Hey there!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0,
+        child: CustomScrollView(
+          slivers: [
+            // 1. The main upper content section
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(18, 52, 18, 0),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  const Text(
+                    'Hey there!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  const Text(
+                    "Let's get your fitness journey started!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.ink,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  const SizedBox(height: 42),
+                  Text(
+                    question,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: AppColors.charcoal,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+                  Center(child: field),
+                ]),
+              ),
+            ),
+
+            // 2. The sticky footer section (Replaces Spacer)
+            SliverFillRemaining(
+              hasScrollBody: false, // Prevents duplicate scrolling behavior
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 20, 18, 28),
+                child: Align(
+                  alignment: Alignment.bottomCenter, // Pushes footer down
+                  child: footer,
                 ),
               ),
-              const SizedBox(height: 14),
-              const Text(
-                "Let's get your fitness journey started!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.ink,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(height: 42),
-              Text(
-                question,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.charcoal,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(height: 22),
-
-              field,
-
-              const Spacer(),
-
-              footer,
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

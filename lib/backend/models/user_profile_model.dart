@@ -1,3 +1,9 @@
+import 'package:hive/hive.dart';
+
+// This part directive is crucial for the generator!
+part 'user_profile_model.g.dart';
+
+@HiveType(typeId: 0)
 class UserProfileModel {
   const UserProfileModel({
     this.id = 1,
@@ -15,18 +21,43 @@ class UserProfileModel {
     this.updatedAt,
   });
 
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String? name;
+
+  @HiveField(2)
   final int? age;
+
+  @HiveField(3)
   final String? gender;
+
+  @HiveField(4)
   final double? heightCm;
+
+  @HiveField(5)
   final double? weightKg;
+
+  @HiveField(6)
   final String? activityLevel;
+
+  @HiveField(7)
   final int? calorieGoal;
+
+  @HiveField(8)
   final int? proteinGoalG;
+
+  @HiveField(9)
   final int? carbsGoalG;
+
+  @HiveField(10)
   final int? fatGoalG;
+
+  @HiveField(11)
   final DateTime? createdAt;
+
+  @HiveField(12)
   final DateTime? updatedAt;
 
   UserProfileModel copyWith({
@@ -59,60 +90,5 @@ class UserProfileModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
-
-  Map<String, Object?> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'age': age,
-      'gender': gender,
-      'height_cm': heightCm,
-      'weight_kg': weightKg,
-      'activity_level': activityLevel,
-      'calorie_goal': calorieGoal,
-      'protein_goal_g': proteinGoalG,
-      'carbs_goal_g': carbsGoalG,
-      'fat_goal_g': fatGoalG,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-    };
-  }
-
-  factory UserProfileModel.fromMap(Map<String, Object?> map) {
-    return UserProfileModel(
-      id: map['id'] as int? ?? 1,
-      name: map['name'] as String?,
-      age: map['age'] as int?,
-      gender: map['gender'] as String?,
-      heightCm: _parseDouble(map['height_cm']),
-      weightKg: _parseDouble(map['weight_kg']),
-      activityLevel: map['activity_level'] as String?,
-      calorieGoal: _parseInt(map['calorie_goal']),
-      proteinGoalG: _parseInt(map['protein_goal_g']),
-      carbsGoalG: _parseInt(map['carbs_goal_g']),
-      fatGoalG: _parseInt(map['fat_goal_g']),
-      createdAt: _parseDate(map['created_at']),
-      updatedAt: _parseDate(map['updated_at']),
-    );
-  }
-
-  static DateTime? _parseDate(Object? value) {
-    if (value is! String || value.isEmpty) return null;
-    return DateTime.tryParse(value);
-  }
-
-  static double? _parseDouble(Object? value) {
-    if (value is double) return value;
-    if (value is int) return value.toDouble();
-    if (value is String) return double.tryParse(value);
-    return null;
-  }
-
-  static int? _parseInt(Object? value) {
-    if (value is int) return value;
-    if (value is double) return value.round();
-    if (value is String) return int.tryParse(value);
-    return null;
   }
 }

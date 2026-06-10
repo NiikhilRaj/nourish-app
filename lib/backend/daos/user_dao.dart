@@ -1,50 +1,47 @@
-import 'package:sqflite/sqflite.dart';
-
 import '../db_service.dart';
 import '../models/user_profile_model.dart';
 
 class UserDao {
   UserDao({DbService? dbService})
-    : _dbService = dbService ?? DbService.instance;
+      : _dbService = dbService ?? DbService.instance;
 
   final DbService _dbService;
 
-  static const String tableName = 'user_profile';
+  // Since Hive is a key-value store, we just need a single key
+  // to save and retrieve the user's profile.
+  static const String profileKey = 'current_user';
 
   Future<UserProfileModel?> getProfile() async {
-    final db = await _dbService.database;
-    final rows = await db.query(
-      tableName,
-      where: 'id = ?',
-      whereArgs: const [1],
-      limit: 1,
-    );
-
-    if (rows.isEmpty) return null;
-    return UserProfileModel.fromMap(rows.first);
+    // Hive box reads are instant (synchronous), but we keep the Future
+    // return type here so we don't break your existing app architecture!
+    final box = _dbService.userProfileBox;
+    return box.get(profileKey) as UserProfileModel?;
   }
 
   Future<void> upsertName(String name) async {
-    await _upsert({'name': name.trim()});
+    await _updateProfile((profile) => profile.copyWith(name: name.trim()));
   }
 
   Future<void> upsertAge(int age) async {
-    await _upsert({'age': age});
+    await _updateProfile((profile) => profile.copyWith(age: age));
   }
 
   Future<void> upsertGender(String gender) async {
-    await _upsert({'gender': gender});
+    await _updateProfile((profile) => profile.copyWith(gender: gender));
   }
 
   Future<void> upsertBodyMetrics({
     required double heightCm,
     required double weightKg,
   }) async {
-    await _upsert({'height_cm': heightCm, 'weight_kg': weightKg});
+    await _updateProfile((profile) => profile.copyWith(
+      heightCm: heightCm,
+      weightKg: weightKg,
+    ));
   }
 
   Future<void> upsertActivityLevel(String activityLevel) async {
-    await _upsert({'activity_level': activityLevel});
+    await _updateProfile((profile) => profile.copyWith(activityLevel: activityLevel));
   }
 
   Future<void> upsertMacroGoals({
@@ -53,43 +50,38 @@ class UserDao {
     required int carbsG,
     required int fatG,
   }) async {
-    await _upsert({
-      'calorie_goal': calories,
-      'protein_goal_g': proteinG,
-      'carbs_goal_g': carbsG,
-      'fat_goal_g': fatG,
-    });
+    await _updateProfile((profile) => profile.copyWith(
+      calorieGoal: calories,
+      proteinGoalG: proteinG,
+      carbsGoalG: carbsG,
+      fatGoalG: fatG,
+    ));
   }
 
   Future<void> upsertProfile(UserProfileModel profile) async {
-    await _upsert(
-      profile.toMap()
-        ..remove('id')
-        ..remove('created_at')
-        ..remove('updated_at'),
-    );
+    await _updateProfile((_) => profile);
   }
 
-  Future<void> _upsert(Map<String, Object?> values) async {
-    final db = await _dbService.database;
-    final now = DateTime.now().toIso8601String();
-    final existingProfile = await getProfile();
+  /// The new heart of the DAO. Instead of raw SQL maps, it takes a function
+  /// that modifies the current profile object using `copyWith`.
+  Future<void> _updateProfile(UserProfileModel Function(UserProfileModel) updateFn) async {
+    final box = _dbService.userProfileBox;
 
-    if (existingProfile == null) {
-      await db.insert(tableName, {
-        'id': 1,
-        'created_at': now,
-        'updated_at': now,
-        ...values,
-      }, conflictAlgorithm: ConflictAlgorithm.replace);
-      return;
-    }
+    // 1. Fetch the existing profile, or create a blank one if it doesn't exist yet
+    final currentProfile = box.get(profileKey) as UserProfileModel? ?? const UserProfileModel();
 
-    await db.update(
-      tableName,
-      {...values, 'updated_at': now},
-      where: 'id = ?',
-      whereArgs: const [1],
+    // 2. Apply the requested updates
+    UserProfileModel updatedProfile = updateFn(currentProfile);
+
+    // 3. Automatically handle timestamps
+    final now = DateTime.now();
+    updatedProfile = updatedProfile.copyWith(
+      createdAt: currentProfile.createdAt ?? now,
+      updatedAt: now,
     );
+
+    // 4. Save the modified object back to Hive (this replaces the old object entirely)
+    // We use put() instead of putAt() so we can retrieve it by the string key later.
+    await box.put(profileKey, updatedProfile);
   }
 }
