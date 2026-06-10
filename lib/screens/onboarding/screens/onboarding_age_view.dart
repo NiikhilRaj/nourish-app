@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../widgets/onboarding/onboarding_action_button.dart';
+import '../../../widgets/onboarding/onboarding_step_scaffold.dart';
+import '../../../widgets/onboarding/onboarding_text_field.dart';
 import '../onboarding_model.dart';
-import 'onboarding_name_view.dart';
 
 class OnboardingAgeView extends StatelessWidget {
   const OnboardingAgeView({

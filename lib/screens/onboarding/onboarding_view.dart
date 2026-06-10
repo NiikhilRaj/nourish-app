@@ -8,7 +8,7 @@ import 'screens/onboarding_activity_view.dart';
 import 'screens/onboarding_age_view.dart';
 import 'screens/onboarding_body_metrics_view.dart';
 import 'screens/onboarding_gender_view.dart';
-import 'screens/onboarding_macros.dart';
+import 'screens/onboarding_macros_view.dart';
 import 'screens/onboarding_name_view.dart';
 
 class OnboardingView extends StatelessWidget {
@@ -80,6 +80,7 @@ class _OnboardingFlowState extends State<_OnboardingFlow> {
           model: model,
           onBack: model.previousStep,
           onNext: () async {
+            FocusScope.of(context).unfocus();
             await model.saveBodyMetrics(dbProvider);
           },
         ),

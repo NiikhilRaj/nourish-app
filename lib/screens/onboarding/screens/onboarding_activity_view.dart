@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/app_colors.dart';
+import '../../../widgets/onboarding/onboarding_action_button.dart';
+import '../../../widgets/onboarding/onboarding_step_scaffold.dart';
 import '../onboarding_model.dart';
-import 'onboarding_name_view.dart';
 
 class OnboardingActivityView extends StatefulWidget {
   const OnboardingActivityView({
