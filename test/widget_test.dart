@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:nourish_app/providers/shared_preferences_provider.dart';
 import 'package:nourish_app/main.dart';
+import 'package:nourish_app/providers/shared_preferences_provider.dart';
 
 void main() {
   testWidgets('App landing check', (WidgetTester tester) async {
