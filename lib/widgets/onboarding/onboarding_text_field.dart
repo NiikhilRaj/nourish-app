@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_colors.dart';
 
 /// Center-aligned text field used across the onboarding flow.
@@ -34,20 +34,24 @@ class OnboardingTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       textCapitalization: textCapitalization,
       textAlign: TextAlign.center,
+      // === USER INPUT STYLE ===
       style: const TextStyle(
+        fontFamily: 'Chivo',
+        fontSize: 14,                // Matches Size: 14px
+        fontWeight: FontWeight.w300, // Matches Weight: 300 / Light
+        letterSpacing: 14 * 0.01,    // Matches Letter spacing: 1% (Font size * percentage)
         color: AppColors.ink,
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0,
       ),
       decoration: InputDecoration(
         hintText: hintText,
         errorText: errorText,
+        // === PLACEHOLDER HINT STYLE ===
         hintStyle: const TextStyle(
+          fontFamily: 'Chivo',
+          fontSize: 14,              // Matches Size: 14px
+          fontWeight: FontWeight.w300, // Matches Weight: 300 / Light
+          letterSpacing: 14 * 0.01,  // Matches Letter spacing: 1%
           color: AppColors.coolGray,
-          fontSize: 11,
-          fontWeight: FontWeight.w400,
-          letterSpacing: 0,
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
