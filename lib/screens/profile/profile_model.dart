@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../backend/models.dart';
 import '../../providers/db_provider.dart';
+import '../../backend/models/user_model.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   bool _isEditMode = false;
@@ -19,7 +20,7 @@ class ProfileViewModel extends ChangeNotifier {
   int carbs = 200;
   int fat = 70;
 
-  UserModel? _originalUser;
+  UserModel? _originalUser; //changed according to onboarding
   MealPreferencesModel? _originalPrefs;
 
   bool get isEditMode => _isEditMode;
@@ -40,11 +41,12 @@ class ProfileViewModel extends ChangeNotifier {
       final day = int.parse(parts[0]);
       final month = int.parse(parts[1]);
       final year = int.parse(parts[2]);
-      
+
       final birthDate = DateTime(year, month, day);
       final today = DateTime.now();
       int calculatedAge = today.year - birthDate.year;
-      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+      if (today.month < birthDate.month ||
+          (today.month == birthDate.month && today.day < birthDate.day)) {
         calculatedAge--;
       }
       return calculatedAge;
@@ -59,8 +61,8 @@ class ProfileViewModel extends ChangeNotifier {
       age = _originalUser!.age;
       dob = _originalUser!.dob ?? '';
       gender = _originalUser!.gender;
-      weight = _originalUser!.weight;
-      height = _originalUser!.height;
+      weight = _originalUser!.weightKg;
+      height = _originalUser!.heightCm;
       activityLevel = _originalUser!.activityLevel;
       profilePhotoBase64 = _originalUser!.profilePhotoBase64;
     } else {
@@ -88,23 +90,25 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   bool get hasUnsavedChanges {
-    final userChanged = _originalUser == null
-        ? (name.isNotEmpty || profilePhotoBase64 != null)
-        : (name != _originalUser!.name ||
-            age != _originalUser!.age ||
-            dob != (_originalUser!.dob ?? '') ||
-            gender != _originalUser!.gender ||
-            weight != _originalUser!.weight ||
-            height != _originalUser!.height ||
-            activityLevel != _originalUser!.activityLevel ||
-            profilePhotoBase64 != _originalUser!.profilePhotoBase64);
+    final userChanged =
+        _originalUser == null
+            ? (name.isNotEmpty || profilePhotoBase64 != null)
+            : (name != _originalUser!.name ||
+                age != _originalUser!.age ||
+                dob != (_originalUser!.dob ?? '') ||
+                gender != _originalUser!.gender ||
+                weight != _originalUser!.weightKg ||
+                height != _originalUser!.heightCm ||
+                activityLevel != _originalUser!.activityLevel ||
+                profilePhotoBase64 != _originalUser!.profilePhotoBase64);
 
-    final prefsChanged = _originalPrefs == null
-        ? false
-        : (targetCalories != _originalPrefs!.targetCalories ||
-            protein != _originalPrefs!.targetProtein ||
-            carbs != _originalPrefs!.targetCarbs ||
-            fat != _originalPrefs!.targetFat);
+    final prefsChanged =
+        _originalPrefs == null
+            ? false
+            : (targetCalories != _originalPrefs!.targetCalories ||
+                protein != _originalPrefs!.targetProtein ||
+                carbs != _originalPrefs!.targetCarbs ||
+                fat != _originalPrefs!.targetFat);
 
     return userChanged || prefsChanged;
   }
@@ -126,8 +130,8 @@ class ProfileViewModel extends ChangeNotifier {
       age: age,
       dob: dob,
       gender: gender,
-      weight: weight,
-      height: height,
+      weightKg: weight,
+      heightCm: height,
       activityLevel: activityLevel,
       profilePhotoBase64: profilePhotoBase64,
     );
