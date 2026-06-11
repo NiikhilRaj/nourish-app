@@ -22,7 +22,7 @@ class DbProvider extends ChangeNotifier {
     _loadInitialData();
   }
 
-  // === UNIFIED GETTERS ===
+
   UserModel? get userProfile => _userProfile;
   // This alias ensures the team's existing UI widgets don't break!
   UserModel? get currentUser => _userProfile;
@@ -39,7 +39,7 @@ class DbProvider extends ChangeNotifier {
     _savedRecipes = SavedRecipeDao.getSavedRecipes();
   }
 
-  // === UPDATED TEAM METHODS (Now using UserModel) ===
+
   Future<void> saveUser(UserModel user) async {
     await UserDao.saveUser(user);
     _userProfile = user;
@@ -113,7 +113,7 @@ class DbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // === DEV BRANCH TRACKING METHODS ===
+
   Future<void> saveMealPreferences(MealPreferencesModel preferences) async {
     await MealPreferencesDao.savePreferences(preferences);
     _mealPreferences = preferences;

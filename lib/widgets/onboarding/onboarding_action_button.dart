@@ -30,7 +30,7 @@ class OnboardingActionButton extends StatelessWidget {
     final isOutlined = variant == OnboardingActionVariant.outlined;
 
     return SizedBox(
-      height: 48,
+      height: 52,
       child: isOutlined
           ? OutlinedButton(
               onPressed: onPressed,

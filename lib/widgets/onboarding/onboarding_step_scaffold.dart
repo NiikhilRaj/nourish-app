@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_colors.dart';
 
 /// Shared layout for every onboarding step screen.
@@ -33,35 +33,38 @@ class OnboardingStepScaffold extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(18, 52, 18, 0),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  const Text(
+                   Text(
                     'Hey there!',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.chivo(
                       color: AppColors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w400,
+                      height: 1.0,
                       letterSpacing: 0,
                     ),
                   ),
                   const SizedBox(height: 14),
-                  const Text(
+                  Text(
                     "Let's get your fitness journey started!",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.chivo(
                       color: AppColors.ink,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 0,
+                      fontSize: 16,                 // Size: 16px
+                      fontWeight: FontWeight.w100,  // Weight: 100 (Thin)
+                      height: 1.0,                  // Line height: 100%
+                      letterSpacing: 0,             // Letter spacing: 0%
                     ),
                   ),
                   const SizedBox(height: 42),
                   Text(
                     question,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: AppColors.charcoal,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
+                    style: GoogleFonts.chivo(
+                      color: AppColors.ink,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w100,
+                      height: 1.0,
                       letterSpacing: 0,
                     ),
                   ),
