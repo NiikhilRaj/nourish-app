@@ -36,15 +36,20 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.5
   go_router: ^16.0.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   sqflite: ^2.4.2
   camera: ^0.11.1
+  mobile_scanner: ^5.1.0
+  image_picker: ^1.0.7
   shared_preferences: ^2.5.3
   percent_indicator: ^4.2.5
-  fl_chart: ^1.0.0
+  fl_chart: ^0.69.0
   toastification: ^3.0.3
-  font_awesome_flutter: ^10.9.0
+  flutter_svg: ^2.2.0
+  font_awesome_flutter: ^10.8.0
+  url_launcher: ^6.3.2
   loading_animation_widget: ^1.3.0
-  flutter_svg: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +76,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/images/profile_icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -97,3 +103,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+

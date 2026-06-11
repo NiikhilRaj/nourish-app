@@ -6,9 +6,13 @@ import 'router.dart';
 import 'providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/shared_preferences_provider.dart';
+import 'backend/hive_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive storage
+  await HiveService.init();
 
   // Preload SharedPreferencesProvider to avoid flicker and ensure availability
   final sharedPrefsProvider = SharedPreferencesProvider();
