@@ -73,7 +73,7 @@ class OnboardingActionButton extends StatelessWidget {
       disabledBackgroundColor: AppColors.primaryLight,
       disabledForegroundColor: Colors.white,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     );
   }
 
@@ -81,7 +81,7 @@ class OnboardingActionButton extends StatelessWidget {
     return OutlinedButton.styleFrom(
       foregroundColor: AppColors.black,
       side: const BorderSide(color: AppColors.primaryLight, width: 1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     );
   }
 }

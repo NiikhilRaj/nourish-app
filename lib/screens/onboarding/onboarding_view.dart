@@ -10,6 +10,7 @@ import 'screens/onboarding_body_metrics_view.dart';
 import 'screens/onboarding_gender_view.dart';
 import 'screens/onboarding_macros_view.dart';
 import 'screens/onboarding_name_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingView extends StatelessWidget {
   const OnboardingView({super.key});
@@ -99,6 +100,13 @@ class _OnboardingFlowState extends State<_OnboardingFlow> {
           onNext: () async {
             final saved = await model.saveMacroGoals(dbProvider);
             if (!context.mounted || !saved) return;
+
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('isFirstLaunch', false);
+
+            // Re-check mounted after the async await just to be safe
+            if (!context.mounted) return;
+
             context.go('/home');
           },
         ),

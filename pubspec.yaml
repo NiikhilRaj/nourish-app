@@ -40,10 +40,11 @@ dependencies:
   hive_flutter: ^1.1.0
   sqflite: ^2.4.2
   camera: ^0.11.1
+  mobile_scanner: ^5.1.0
   image_picker: ^1.0.7
   shared_preferences: ^2.5.3
   percent_indicator: ^4.2.5
-  fl_chart: ^1.0.0
+  fl_chart: ^0.69.0
   toastification: ^3.0.3
   flutter_svg: ^2.2.0
   font_awesome_flutter: ^10.8.0
@@ -103,3 +104,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
