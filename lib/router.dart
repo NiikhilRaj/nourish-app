@@ -12,36 +12,42 @@ import 'screens/food_info/food_info_view.dart';
 import 'screens/profile/profile_view.dart';
 import 'screens/about_us/about_us_view.dart';
 
-final router = GoRouter(
-  routes: [
-    GoRoute(path: '/', builder: (context, state) => const LandingView()),
-    GoRoute(path: '/landing', builder: (context, state) => const LandingView()),
-    GoRoute(
-      path: '/onboarding',
-      builder: (context, state) => const OnboardingView(),
-    ),
-    GoRoute(path: '/home', builder: (context, state) => const HomeView()),
-    GoRoute(
-      path: '/food_log',
-      builder: (context, state) => const FoodLogView(),
-    ),
-    GoRoute(
-      path: '/add_meal',
-      builder: (context, state) => const AddMealView(),
-    ),
-    GoRoute(
-      path: '/ai_recipes',
-      builder: (context, state) => const AiRecipesView(),
-    ),
-    GoRoute(
-      path: '/saved_recipes',
-      builder: (context, state) => const SavedRecipesView(),
-    ),
-    GoRoute(
-      path: '/food_info',
-      builder: (context, state) => const FoodInfoView(),
-    ),
-    GoRoute(path: '/profile', builder: (context, state) => const ProfileView()),
-    GoRoute(path: '/about_us', builder: (context, state) => AboutUsView()),
-  ],
-);
+
+GoRouter createRouter(bool isFirstLaunch) {
+  return GoRouter(
+    // If it's the first launch, start at the root ('/'). Otherwise, skip to '/home'.
+    initialLocation: isFirstLaunch ? '/' : '/home',
+
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const LandingView()),
+      GoRoute(path: '/landing', builder: (context, state) => const LandingView()),
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingView(),
+      ),
+      GoRoute(path: '/home', builder: (context, state) => const HomeView()),
+      GoRoute(
+        path: '/food_log',
+        builder: (context, state) => const FoodLogView(),
+      ),
+      GoRoute(
+        path: '/add_meal',
+        builder: (context, state) => const AddMealView(),
+      ),
+      GoRoute(
+        path: '/ai_recipes',
+        builder: (context, state) => const AiRecipesView(),
+      ),
+      GoRoute(
+        path: '/saved_recipes',
+        builder: (context, state) => const SavedRecipesView(),
+      ),
+      GoRoute(
+        path: '/food_info',
+        builder: (context, state) => const FoodInfoView(),
+      ),
+      GoRoute(path: '/profile', builder: (context, state) => const ProfileView()),
+      GoRoute(path: '/about_us', builder: (context, state) => AboutUsView()),
+    ],
+  );
+}

@@ -1,32 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-
-class FoodBubble extends StatelessWidget {
-  final String img;
-  final double s;
-
-  const FoodBubble({super.key, required this.img, required this.s});
-
-  @override
-  Widget build(BuildContext c) {
-    return Container(
-      width: s,
-      height: s,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.black, width: 2.5),
-        boxShadow: const [
-          BoxShadow(color: Color(0xff6C63FF), offset: Offset(4, 4)),
-        ],
-      ),
-      child: Padding(padding: EdgeInsets.all(s * .15), child: Image.asset(img)),
-    );
-  }
-}
+import 'landing_model.dart';
 
 class LandingView extends StatelessWidget {
   const LandingView({super.key});
+
+  //delete this block
+  Widget _buildDot(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext c) {
@@ -242,7 +232,7 @@ class LandingView extends StatelessWidget {
                         ),
                         elevation: 0,
                       ),
-                      onPressed: () => c.go('/home'),
+                      onPressed: () => c.go('/onboarding'),
                       child: const Text(
                         'Get Started',
                         style: TextStyle(
@@ -260,14 +250,46 @@ class LandingView extends StatelessWidget {
       ),
     );
   }
+}
+class FoodBubble extends StatelessWidget {
+  final String img;
+  final double s;
 
-  Widget _buildDot(double size, Color color) {
+  const FoodBubble({
+    super.key,
+    required this.img,
+    required this.s,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: size,
-      height: size,
+      width: s,
+      height: s,
       decoration: BoxDecoration(
+        color: Colors.white,
         shape: BoxShape.circle,
-        border: Border.all(color: color, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(s * 0.2), // Adds padding inside the circle
+          child: Image.asset(
+            img,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              // Failsafe in case the assets aren't added to pubspec.yaml yet
+              return Icon(Icons.fastfood, size: s * 0.4, color: Colors.grey);
+            },
+          ),
+        ),
       ),
     );
   }
