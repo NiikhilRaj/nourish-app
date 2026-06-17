@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
 import 'home_model.dart';
+import '../../widgets/bottom_nav_bar.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -13,10 +13,17 @@ class HomeView extends StatelessWidget {
       child: Consumer<HomeViewModel>(
         builder: (context, model, child) {
           return Scaffold(
+            appBar: AppBar(
+              title: const Text('Nourish Home'),
+            ),
+            bottomNavigationBar: const AppBottomNavBar(currentIndex: 0),
+
+
             body: Center(
-              child: ElevatedButton(
-                onPressed: () => context.go('/profile'),
-                child: const Text('Go to Profile'),
+              child: Text(
+                'Welcome to Nourish!\nTrack your daily nutrition and explore AI Recipes below.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
               ),
             ),
           );
@@ -25,6 +32,7 @@ class HomeView extends StatelessWidget {
     );
   }
 }
+
 
 
 
